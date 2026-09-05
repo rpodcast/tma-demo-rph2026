@@ -1,0 +1,8 @@
+# nix files
+result
+
+# R files
+.Renviron
+
+# misc files
+snowflake.log
