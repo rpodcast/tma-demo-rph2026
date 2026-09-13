@@ -187,7 +187,6 @@ new_continuous_tool <- function(values) {
   )
 }
 
-# moonshotai/kimi-latest
 new_chat <- function(values) {
   chat <- ellmer::chat_openrouter(
     system_prompt = paste(
