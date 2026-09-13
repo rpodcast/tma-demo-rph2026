@@ -13,3 +13,7 @@ snowflake.log
 # Quarto files
 slides_files/
 slides.html
+.quarto
+/.quarto/
+**/*.quarto_ipynb
+public/
