@@ -1,0 +1,542 @@
+/*-- scss:functions --*/
+
+// ============================================================================
+//  TERMINAL THEME — color-scheme (palette) registry
+//  ---------------------------------------------------------------------------
+//  This region defines the named palettes that power `$terminal-palette`.
+//  It lives in `scss:functions` (not `defaults`) on purpose: Quarto always
+//  layers the theme's `functions` BEFORE any user theme file, so this map is
+//  guaranteed to exist by the time the `defaults` below run — even when the
+//  user only sets `$terminal-palette: "solarized-dark";` in their own file.
+//
+//  Each palette is a map with these keys:
+//    mode           : "dark" | "light"  (controls auto-toned CRT effects)
+//    bg             : slide background
+//    fg             : default body text
+//    muted          : de-emphasized / secondary text
+//    accent         : primary accent (headings, prompts, links)
+//    accent-bright  : brighter accent for big headings
+//    accent-soft    : slightly darker accent
+//    green          : prompt ">" / status dot / .ok
+//    pink           : strong / negative emphasis / .neg
+//    border         : box & card borders
+// ============================================================================
+
+$terminal-palettes: (
+  // -- Default: retro amber phosphor --------------------------------------
+  "amber": (
+    mode: dark,
+    bg: #0a0a0a, fg: #c8c8c8, muted: #6f6f6f,
+    accent: #f5a623, accent-bright: #ffb733, accent-soft: #e8911f,
+    green: #4ade80, pink: #f87171, border: #3a3216,
+  ),
+
+  // -- Solarized (Ethan Schoonover) ---------------------------------------
+  "solarized-dark": (
+    mode: dark,
+    bg: #002b36, fg: #93a1a1, muted: #586e75,
+    accent: #b58900, accent-bright: #cb9b1a, accent-soft: #93710a,
+    green: #859900, pink: #dc322f, border: #073642,
+  ),
+  "solarized-light": (
+    mode: light,
+    bg: #fdf6e3, fg: #586e75, muted: #93a1a1,
+    accent: #b58900, accent-bright: #cb4b16, accent-soft: #93710a,
+    green: #859900, pink: #dc322f, border: #eee8d5,
+  ),
+
+  // -- Tomorrow Night Eighties (Chris Kempson) ----------------------------
+  "tomorrow-night-eighties": (
+    mode: dark,
+    bg: #2d2d2d, fg: #cccccc, muted: #999999,
+    accent: #f2777a, accent-bright: #ffc66d, accent-soft: #d27b53,
+    green: #99cc99, pink: #f2777a, border: #515151,
+  ),
+
+  // -- Dracula ------------------------------------------------------------
+  "dracula": (
+    mode: dark,
+    bg: #282a36, fg: #f8f8f2, muted: #6272a4,
+    accent: #bd93f9, accent-bright: #ff79c6, accent-soft: #9b6fe0,
+    green: #50fa7b, pink: #ff5555, border: #44475a,
+  ),
+
+  // -- Gruvbox (morhetz) --------------------------------------------------
+  "gruvbox-dark": (
+    mode: dark,
+    bg: #282828, fg: #ebdbb2, muted: #928374,
+    accent: #fabd2f, accent-bright: #fe8019, accent-soft: #d79921,
+    green: #b8bb26, pink: #fb4934, border: #504945,
+  ),
+  "gruvbox-light": (
+    mode: light,
+    bg: #fbf1c7, fg: #3c3836, muted: #7c6f64,
+    accent: #b57614, accent-bright: #af3a03, accent-soft: #d79921,
+    green: #79740e, pink: #9d0006, border: #ebdbb2,
+  ),
+
+  // -- Nord (Arctic Ice Studio) -------------------------------------------
+  "nord": (
+    mode: dark,
+    bg: #2e3440, fg: #d8dee9, muted: #4c566a,
+    accent: #88c0d0, accent-bright: #8fbcbb, accent-soft: #81a1c1,
+    green: #a3be8c, pink: #bf616a, border: #434c5e,
+  ),
+
+  // -- Monokai ------------------------------------------------------------
+  "monokai": (
+    mode: dark,
+    bg: #272822, fg: #f8f8f2, muted: #75715e,
+    accent: #fd971f, accent-bright: #e6db74, accent-soft: #f92672,
+    green: #a6e22e, pink: #f92672, border: #49483e,
+  ),
+
+  // -- One Dark (Atom) ----------------------------------------------------
+  "one-dark": (
+    mode: dark,
+    bg: #282c34, fg: #abb2bf, muted: #5c6370,
+    accent: #61afef, accent-bright: #56b6c2, accent-soft: #528bce,
+    green: #98c379, pink: #e06c75, border: #3e4451,
+  ),
+
+  // -- Catppuccin Mocha ---------------------------------------------------
+  "catppuccin-mocha": (
+    mode: dark,
+    bg: #1e1e2e, fg: #cdd6f4, muted: #6c7086,
+    accent: #cba6f7, accent-bright: #f5c2e7, accent-soft: #b4befe,
+    green: #a6e3a1, pink: #f38ba8, border: #313244,
+  ),
+
+  // -- Classic green phosphor (VT220-ish) ---------------------------------
+  "green-phosphor": (
+    mode: dark,
+    bg: #001100, fg: #33ff66, muted: #1f8a3f,
+    accent: #39ff14, accent-bright: #7dff5c, accent-soft: #2bd80f,
+    green: #39ff14, pink: #ff5555, border: #0a3a18,
+  ),
+
+  // -- Cyan on navy (the README example) ----------------------------------
+  "cyan-navy": (
+    mode: dark,
+    bg: #001014, fg: #c8d6d6, muted: #5f7a7a,
+    accent: #00e0ff, accent-bright: #5cf0ff, accent-soft: #00b8d4,
+    green: #00ff9c, pink: #ff6b6b, border: #0d3540,
+  ),
+);
+
+// Look up the active palette; fall back to "amber" if an unknown name is set.
+@function terminal-pick($name) {
+  @if map-has-key($terminal-palettes, $name) {
+    @return map-get($terminal-palettes, $name);
+  }
+  @warn "Unknown $terminal-palette '#{$name}'. Falling back to 'amber'. " +
+        "Available: #{map-keys($terminal-palettes)}.";
+  @return map-get($terminal-palettes, "amber");
+}
+
+
+/*-- scss:defaults --*/
+
+// ============================================================================
+//  TERMINAL THEME — customizable variables
+//  ---------------------------------------------------------------------------
+//  Two ways to recolor the theme:
+//
+//  1) Pick a ready-made color scheme (like a modern terminal):
+//
+//        /*-- scss:defaults --*/
+//        $terminal-palette: "solarized-dark";
+//
+//     Available: amber (default), solarized-dark, solarized-light,
+//     tomorrow-night-eighties, dracula, gruvbox-dark, gruvbox-light, nord,
+//     monokai, one-dark, catppuccin-mocha, green-phosphor, cyan-navy.
+//
+//  2) Override individual colors. Every variable below uses `!default`, so you
+//     can override ANY color or font — on its own, or on top of a palette:
+//
+//        /*-- scss:defaults --*/
+//        $terminal-palette: "dracula";   // start from Dracula...
+//        $terminal-accent:  #00e0ff;     // ...but make the accent cyan
+//
+//  Enable your overrides by listing your file AFTER the theme:
+//
+//        format:
+//          terminal-revealjs:
+//            theme:
+//              - custom.scss
+// ============================================================================
+
+// ---- Pick a color scheme ---------------------------------------------------
+$terminal-palette: "amber" !default;       // name of a built-in palette
+$_terminal-pal: terminal-pick($terminal-palette);
+$terminal-mode:  map-get($_terminal-pal, mode) !default;  // "dark" | "light"
+
+// ---- Color palette (each derives from the selected scheme) -----------------
+$terminal-bg:            map-get($_terminal-pal, bg)            !default;  // slide background
+$terminal-fg:            map-get($_terminal-pal, fg)            !default;  // default body text
+$terminal-muted:         map-get($_terminal-pal, muted)         !default;  // de-emphasized / secondary text
+$terminal-accent:        map-get($_terminal-pal, accent)        !default;  // primary accent (headings, prompts)
+$terminal-accent-bright: map-get($_terminal-pal, accent-bright) !default;  // brighter accent for big headings
+$terminal-accent-soft:   map-get($_terminal-pal, accent-soft)   !default;  // slightly darker accent
+$terminal-green:         map-get($_terminal-pal, green)         !default;  // prompt ">" and status dot
+$terminal-pink:          map-get($_terminal-pal, pink)          !default;  // strong/negative emphasis
+$terminal-border:        map-get($_terminal-pal, border)        !default;  // box / card borders
+$terminal-box-bg:        rgba($terminal-accent, 0.06)           !default;  // callout fill
+
+// Map common reveal.js roles onto the palette (still overridable)
+$terminal-link:          $terminal-accent !default;
+$terminal-strong:        $terminal-accent-bright !default;  // **bold** color
+$terminal-em:            $terminal-accent !default;         // *italic* color
+// Code-block fill: nudge the background slightly for contrast. On dark schemes
+// we darken; on light schemes we darken only a touch so code still reads.
+$terminal-code-bg:       if($terminal-mode == dark, darken($terminal-bg, 3%), darken($terminal-bg, 4%)) !default;
+$terminal-code-fg:       $terminal-fg !default;
+
+// ---- Fonts -----------------------------------------------------------------
+// Body/code font and heading (pixel/display) font. Swap freely.
+// For a chunkier pixel look set: $terminal-heading-font: "Press Start 2P", monospace;
+$terminal-body-font:     "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace !default;
+$terminal-heading-font:  "VT323", "JetBrains Mono", monospace !default;
+$terminal-code-font:     $terminal-body-font !default;
+
+// ---- Sizing ----------------------------------------------------------------
+$terminal-root-font-size:  26px !default;
+$terminal-h1-size:         3.4em !default;
+$terminal-h2-size:         2.6em !default;
+$terminal-h3-size:         1.5em !default;
+$terminal-heading-spacing: 0.02em !default;
+
+// ---- Slide insets (reserve space for the status bar / footer chrome) -------
+// Increase these if your status bar or footer text wraps onto two lines.
+$terminal-content-top:    90px !default;   // gap below the top status bar
+$terminal-content-bottom: 70px !default;   // gap above the bottom footer
+
+// ---- Effects (auto-toned to the palette's light/dark mode) -----------------
+// Glow looks great on dark schemes but muddy on light ones, and scanlines need
+// to be far subtler on a light background. These defaults adapt automatically;
+// override any of them to force a specific look.
+$terminal-glow:        ($terminal-mode == dark) !default;  // accent glow on headings
+$terminal-scanlines:   true !default;                      // CRT scanline overlay
+$terminal-glow-color:  rgba($terminal-accent, 0.45) !default;
+// Scanline tint + strength: dark schemes darken between lines; light schemes
+// need a much fainter overlay so text stays readable.
+$terminal-scanline-color:    if($terminal-mode == dark, rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.05)) !default;
+$terminal-scanline-opacity:  if($terminal-mode == dark, 0.5, 0.35) !default;
+
+// ---- Wire palette into reveal.js / Quarto SCSS variables -------------------
+$body-bg:                       $terminal-bg !default;
+$body-color:                    $terminal-fg !default;
+$link-color:                    $terminal-link !default;
+$selection-bg:                  rgba($terminal-accent, 0.35) !default;
+
+$font-family-sans-serif:        $terminal-body-font !default;
+$font-family-monospace:         $terminal-code-font !default;
+$presentation-font-size-root:   $terminal-root-font-size !default;
+$presentation-heading-font:     $terminal-heading-font !default;
+$presentation-heading-color:    $terminal-accent !default;
+$presentation-h1-font-size:     $terminal-h1-size !default;
+$presentation-h2-font-size:     $terminal-h2-size !default;
+$presentation-h3-font-size:     $terminal-h3-size !default;
+$code-block-bg:                 $terminal-code-bg !default;
+$code-color:                    $terminal-accent !default;
+
+
+/*-- scss:rules --*/
+
+.reveal {
+  font-family: $terminal-body-font;
+  letter-spacing: 0.01em;
+}
+
+.reveal .slides {
+  text-align: left;
+}
+
+// Reserve vertical space so slide content never collides with the
+// absolutely-positioned status bar (top) or footer (bottom).
+.reveal .slides > section,
+.reveal .slides > section > section {
+  padding-top: $terminal-content-top;
+  padding-bottom: $terminal-content-bottom;
+  box-sizing: border-box;
+}
+
+// ---- Headings: uppercase, amber, optional glow -----------------------------
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  font-family: $terminal-heading-font;
+  text-transform: uppercase;
+  letter-spacing: $terminal-heading-spacing;
+  line-height: 1.02;
+  margin-bottom: 0.4em;
+  color: $terminal-accent-bright;
+  @if $terminal-glow {
+    text-shadow:
+      0 0 2px $terminal-glow-color,
+      0 0 12px $terminal-glow-color,
+      0 0 28px rgba($terminal-accent, 0.25);
+  }
+}
+
+.reveal h4,
+.reveal h5 {
+  font-family: $terminal-heading-font;
+  text-transform: uppercase;
+  color: $terminal-accent;
+}
+
+// Kicker line: write `[// HERMES AGENT MASTERCLASS]{.kicker}`
+.reveal .kicker {
+  display: block;
+  font-family: $terminal-body-font;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: $terminal-muted;
+  font-size: 0.7em;
+  margin-bottom: 0.5em;
+}
+
+// Subtitle / lede under a heading: `[text]{.lede}` or `.subtitle`
+.reveal .lede,
+.reveal .subtitle {
+  color: $terminal-muted;
+  font-size: 1.05em;
+  margin-bottom: 0.8em;
+}
+
+// Muted description / supporting line: `[text]{.desc}`
+.reveal .desc {
+  display: block;
+  color: $terminal-muted;
+  font-size: 0.95em;
+}
+
+// ---- Section-break slide ---------------------------------------------------
+// Add `.section-break` to a slide header to vertically center its content
+// and emphasise the title — use these as chapter / section dividers:
+//
+//   ## SKILLS. {.section-break terminal-path="..." terminal-status="..."}
+//
+.reveal section.section-break {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+.reveal section.section-break > * {
+  margin-left: 0;
+  margin-right: 0;
+}
+.reveal section.section-break h1,
+.reveal section.section-break h2 {
+  font-size: $terminal-h1-size * 1.15;
+  margin-bottom: 0.3em;
+}
+.reveal section.section-break .lede {
+  color: $terminal-accent;     // amber lede on section breaks
+  font-size: 1.25em;
+  margin-bottom: 0.6em;
+}
+.reveal section.section-break .kicker {
+  font-size: 0.75em;
+  margin-bottom: 0.6em;
+}
+
+// ---- Inline emphasis -------------------------------------------------------
+.reveal strong { color: $terminal-strong; font-weight: 700; }
+.reveal em     { color: $terminal-em; font-style: italic; }
+.reveal a      { color: $terminal-link; text-decoration: none; border-bottom: 1px dotted currentColor; }
+.reveal code:not(.sourceCode) {
+  color: $terminal-accent;
+  background: $terminal-code-bg;
+  padding: 0.05em 0.3em;
+  border-radius: 2px;
+}
+// Negative / strong emphasis helper: `[stateless]{.neg}`
+.reveal .neg { color: $terminal-pink; font-weight: 700; }
+.reveal .ok  { color: $terminal-green; font-weight: 700; }
+
+// ---- Bullet lists as left-bar callout boxes --------------------------------
+// Use a normal markdown list inside `::: callouts` to get the boxed look,
+// or rely on the default lists which also get a subtle bar.
+.reveal .callouts ul,
+.reveal ul.boxed {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+.reveal .callouts ul > li,
+.reveal ul.boxed > li {
+  position: relative;
+  background: $terminal-box-bg;
+  border-left: 4px solid $terminal-accent;
+  padding: 0.55em 0.8em 0.55em 2.2em;
+  margin-bottom: 0.7em;
+  border-radius: 2px;
+}
+.reveal .callouts ul > li::before,
+.reveal ul.boxed > li::before {
+  content: "›";
+  position: absolute;
+  left: 0.8em;
+  color: $terminal-accent;
+  font-weight: 700;
+}
+
+// ---- Numbered-list boxes (01, 02, 03 ...) ----------------------------------
+// Wrap an ordered list in `::: steps`.
+.reveal .steps ol {
+  list-style: none;
+  counter-reset: term-step;
+  margin-left: 0;
+  padding-left: 0;
+}
+.reveal .steps ol > li {
+  counter-increment: term-step;
+  border: 1px solid $terminal-border;
+  background: rgba($terminal-accent, 0.03);
+  padding: 0.55em 0.9em 0.55em 3.2em;
+  margin-bottom: 0.6em;
+  border-radius: 3px;
+  position: relative;
+}
+.reveal .steps ol > li::before {
+  content: counter(term-step, decimal-leading-zero);
+  position: absolute;
+  left: 0.9em;
+  color: $terminal-accent;
+  font-weight: 700;
+}
+
+// ---- Two-column bordered cards ---------------------------------------------
+// `::: cards` containing several `::: card` divs (or use .columns).
+// IMPORTANT: do NOT put markdown headings (##, ###) inside a card — Quarto
+// turns them into nested reveal.js <section>s, which breaks slide navigation.
+// Use `[Title]{.card-title}` for the card heading instead.
+.reveal .cards {
+  display: flex;
+  gap: 1.2em;
+  margin-top: 0.6em;
+}
+.reveal .card {
+  flex: 1;
+  border: 1px solid $terminal-border;
+  border-radius: 4px;
+  padding: 1em 1.1em;
+  background: rgba($terminal-accent, 0.03);
+}
+.reveal .card .card-title,
+.reveal .card > :first-child {
+  display: block;
+  color: $terminal-accent;
+  text-transform: uppercase;
+  font-family: $terminal-heading-font;
+  font-size: 1.3em;
+  margin-top: 0;
+  margin-bottom: 0.4em;
+}
+
+// ---- Code / tree display block ---------------------------------------------
+.reveal pre,
+.reveal div.sourceCode {
+  background: $terminal-code-bg;
+  border: 1px solid $terminal-border;
+  border-radius: 4px;
+}
+.reveal pre code {
+  color: $terminal-code-fg;
+  font-family: $terminal-code-font;
+  padding: 0.8em 1em;
+  line-height: 1.5;
+}
+
+// ---- Blockquote: terminal note --------------------------------------------
+.reveal blockquote {
+  border-left: 3px solid $terminal-accent;
+  background: $terminal-box-bg;
+  color: $terminal-fg;
+  padding: 0.5em 1em;
+  font-style: normal;
+}
+
+// ============================================================================
+//  Chrome injected by terminal.lua: top status bar + bottom footer
+// ============================================================================
+.reveal .terminal-statusbar {
+  position: absolute;
+  top: 3.5%;
+  left: 4%;
+  right: 4%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: $terminal-body-font;
+  font-size: 0.62em;
+  letter-spacing: 0.05em;
+  color: $terminal-muted;
+  border-bottom: 1px solid rgba($terminal-accent, 0.15);
+  padding-bottom: 0.4em;
+  z-index: 5;
+}
+.reveal .terminal-statusbar .ts-path { color: $terminal-accent; }
+.reveal .terminal-statusbar .ts-path .ts-prompt { color: $terminal-green; margin-right: 0.4em; }
+.reveal .terminal-statusbar .ts-status { color: $terminal-muted; text-transform: uppercase; }
+.reveal .terminal-statusbar .ts-status .ts-dot {
+  color: $terminal-green;
+  margin-right: 0.5em;
+}
+
+.reveal .terminal-footer {
+  position: absolute;
+  bottom: 3.5%;
+  left: 4%;
+  right: 4%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: $terminal-body-font;
+  font-size: 0.55em;
+  color: $terminal-muted;
+  border-top: 1px solid rgba($terminal-accent, 0.12);
+  padding-top: 0.5em;
+  z-index: 5;
+}
+.reveal .terminal-footer .tf-count { letter-spacing: 0.1em; }
+.reveal .terminal-footer .tf-hint   { letter-spacing: 0.05em; }
+.reveal .terminal-footer .tf-dots {
+  display: flex;
+  gap: 0.45em;
+  align-items: center;
+}
+.reveal .terminal-footer .tf-dots .tf-dot {
+  width: 0.4em;
+  height: 0.4em;
+  border-radius: 50%;
+  background: $terminal-muted;
+  opacity: 0.4;
+}
+.reveal .terminal-footer .tf-dots .tf-dot.active {
+  background: $terminal-accent;
+  opacity: 1;
+  box-shadow: 0 0 6px $terminal-glow-color;
+}
+
+// ---- CRT scanline overlay --------------------------------------------------
+@if $terminal-scanlines {
+  .reveal::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0) 0px,
+      rgba(0, 0, 0, 0) 2px,
+      $terminal-scanline-color 3px,
+      $terminal-scanline-color 3px
+    );
+    opacity: $terminal-scanline-opacity;
+  }
+}

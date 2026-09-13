@@ -1,8 +1,15 @@
 # nix files
 result
+.nix-gcroots/
 
 # R files
 .Renviron
 
 # misc files
 snowflake.log
+
+/.luarc.json
+
+# Quarto files
+slides_files/
+slides.html
