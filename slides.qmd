@@ -6,6 +6,7 @@ format:
     theme:
       - custom.scss
     code-line-numbers: false
+    footer: "[trustedminiagents.dev](https://trustedminiagents.dev)"
 date: last-modified
 terminal-path: "trusted-mini-agents"
 ---
