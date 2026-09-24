@@ -9,7 +9,7 @@
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-b85bc7c33db8c58e0ec93c3465666fed.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.10.18">
 
-  <meta name="dcterms.date" content="2026-09-13">
+  <meta name="dcterms.date" content="2026-09-24">
   <title>Trusted Mini-Agents</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -35,7 +35,7 @@
       vertical-align: middle;
     }
   </style>
-  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-d277b599399090c84388b40495fbec86.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-4a9c06d25f190413679134f865a5c074.css">
   <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -145,7 +145,7 @@
 <div class="quarto-title-authors">
 </div>
 
-  <p class="date">2026-09-13</p>
+  <p class="date">2026-09-24</p>
 </section>
 <section id="abide-by-the-rules" class="slide level2" data-terminal-path="introduction">
 <h2>Abide by the Rules</h2>
@@ -583,7 +583,7 @@ Figure&nbsp;1: Flow diagram of a trusted mini-agent.
         }
           var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
           var mailtoRegex = new RegExp(/^mailto:/);
-            var filterRegex = new RegExp("https:\/\/rpodcast\.github\.io\/tma-demo-rph2026\/");
+            var filterRegex = new RegExp('/' + window.location.host + '/');
           var isInternal = (href) => {
               return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
           }
