@@ -13,7 +13,6 @@ rix(
     "watcher"
   ),
   ide = "none",
-  system_pkgs = c("quarto"),
   project_path = getwd(),
   overwrite = TRUE
 )
